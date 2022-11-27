@@ -10,14 +10,14 @@ router.get("/*", (req, res) => {
   const stat = fs.statSync(filepath);
   const fileSize = stat.size;
   const range = req.headers.range;
-  console.log(range);
+  console.log("range: " + range);
 
   if (!range) {
-    const header = { "Content-Type": "video/mp4" };
+    const header = { "Content-Type": "audio/mpeg" };
     res.writeHead(200, header);
     res.end();
   } else {
-    const MAX_CHUNK_SIZE = 1000 * 1000 * 50;
+    const MAX_CHUNK_SIZE = 1000 * 1000 * 2;
     // ranage헤더 파싱
     const parts = range.replace(/bytes=/, "").split("-");
     // 재생 구간 설정
@@ -28,7 +28,7 @@ router.get("/*", (req, res) => {
     const header = {
       "Content-Range": `bytes ${start}-${end}/${fileSize}`,
       "Accept-Ranges": "bytes",
-      "Content-Type": "video/mp4",
+      "Content-Type": "audio/mpeg",
       "Content-Length": fileSize - 1,
     };
     res.writeHead(206, header);
